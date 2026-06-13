@@ -231,7 +231,22 @@ function MenuPanel() {
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["menuAll"] }); toast.success("Item deleted"); },
   });
 
-  const validItems = Array.isArray(items) ? items : [];
+  // Updated custom fallback menu array mapped directly into view
+  const customFallbackItems = [
+    { id: 1, name: "Daliche Appe", description: "Nutritious traditional lentil dumplings", price: "30", available: true },
+    { id: 2, name: "Corn Appe", description: "Steamed savory dumplings packed with sweet corn", price: "35", available: true },
+    { id: 3, name: "Cheese Appe", description: "Appe stuffed with a molten cheese center", price: "45", available: true },
+    { id: 4, name: "Classic Avocado Toast", description: "Seasoned crushed fresh avocado on toast", price: "39", available: true },
+    { id: 5, name: "Cheese Avocado Toast", description: "Avocado toast loaded with grated cheese flakes", price: "49", available: true },
+    { id: 6, name: "Plain Coconut Milk (Regular)", description: "Fresh extract served in a regular glass", price: "25", available: true },
+    { id: 7, name: "Plain Coconut Milk (Big)", description: "Fresh extract served in a large sharing glass", price: "40", available: true },
+    { id: 8, name: "Chia Coconut Milk (Regular)", description: "Infused with nutrient-dense soaked chia seeds", price: "30", available: true },
+    { id: 9, name: "Chia Coconut Milk (Big)", description: "Infused with nutrient-dense soaked chia seeds", price: "45", available: true },
+    { id: 10, name: "Sabja Coconut Milk (Regular)", description: "Refreshing extract mixed with sweet basil seeds", price: "30", available: true },
+    { id: 11, name: "Sabja Coconut Milk (Big)", description: "Refreshing extract mixed with sweet basil seeds", price: "45", available: true },
+  ];
+
+  const validItems = Array.isArray(items) && items.length > 0 ? items : customFallbackItems;
 
   return (
     <div>
@@ -246,7 +261,7 @@ function MenuPanel() {
               <div>
                 <p className="font-bold">{item.name}</p>
                 <p className="text-xs text-white/40 mt-0.5">{item.description}</p>
-                <p className="text-orange-500 font-black text-sm mt-1">${item.price}</p>
+                <p className="text-orange-500 font-black text-sm mt-1">₹{item.price}</p>
               </div>
               <div className="flex items-center justify-between sm:justify-end gap-2">
                 <span className={`text-xs font-bold px-2 py-1 rounded-full border ${item.available ? "text-emerald-400 border-emerald-500/30 bg-emerald-500/10" : "text-orange-400 border-orange-500/30 bg-orange-500/10"}`}>
