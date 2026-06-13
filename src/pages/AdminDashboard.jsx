@@ -7,8 +7,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import QRCode from "qrcode";
 import toast from "react-hot-toast";
-import { adminService, menuService, shopService } from "../services/api";
-import { useAuth } from "../context/AuthContext";
+import { adminService, menuService } from "../../services/api"; // Fixed Path
+import { useAuth } from "../../context/AuthContext"; // Fixed Path
 import { useNavigate } from "react-router-dom";
 
 // ─── Stat Card ───────────────────────────────────────────────────────────────
@@ -280,7 +280,7 @@ const PANELS = [
 
 export default function AdminDashboard() {
   const [active, setActive] = useState("overview");
-  const [isMobileOpen, setIsMobileOpen] = useState(false); // Mobile Menu State
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -300,7 +300,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // Shared inner contents of sidebar navigation
   const SidebarContents = () => (
     <>
       <div className="px-2 py-3 mb-2 flex justify-between items-center">
@@ -308,7 +307,6 @@ export default function AdminDashboard() {
           <p className="text-base font-black bg-gradient-to-br from-[#ffb693] to-[#ff6b00] bg-clip-text text-transparent">STREAK BITES</p>
           <p className="text-xs text-white/30 mt-0.5">Admin Console</p>
         </div>
-        {/* Mobile close chevron inside the sidebar overlay */}
         <button onClick={() => setIsMobileOpen(false)} className="md:hidden text-white/40 hover:text-white">
           <span className="material-symbols-outlined text-[22px]">close</span>
         </button>
@@ -319,7 +317,7 @@ export default function AdminDashboard() {
             key={p.id}
             onClick={() => {
               setActive(p.id);
-              setIsMobileOpen(false); // auto close layout container drawer on select
+              setIsMobileOpen(false);
             }}
             className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
               active === p.id
@@ -346,7 +344,7 @@ export default function AdminDashboard() {
   return (
     <div className="flex h-screen overflow-hidden bg-[#0b1326] text-white flex-col md:flex-row">
       
-      {/* ─── MOBILE TOP HEADER ACTION BAR ─────────────────────────────────────── */}
+      {/* MOBILE TOP HEADER ACTION BAR */}
       <header className="flex md:hidden items-center justify-between px-5 h-16 bg-[#060e20]/90 border-b border-white/10 z-30">
         <div className="flex items-center gap-3">
           <button 
@@ -363,16 +361,15 @@ export default function AdminDashboard() {
         <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-amber-400 rounded-full flex items-center justify-center text-sm">🔥</div>
       </header>
 
-      {/* ─── DESKTOP PERSISTENT SIDEBAR ──────────────────────────────────────── */}
+      {/* DESKTOP PERSISTENT SIDEBAR */}
       <aside className="hidden md:flex w-52 min-w-52 bg-[#060e20]/90 border-r border-white/10 flex-col gap-1 p-3">
         <SidebarContents />
       </aside>
 
-      {/* ─── MOBILE INTERACTIVE DRAWER CONTAINER OVERLAY ─────────────────────── */}
+      {/* MOBILE INTERACTIVE DRAWER CONTAINER OVERLAY */}
       <AnimatePresence>
         {isMobileOpen && (
           <>
-            {/* Dark Backdrop dim screen filter */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -380,7 +377,6 @@ export default function AdminDashboard() {
               onClick={() => setIsMobileOpen(false)}
               className="fixed inset-0 bg-black/60 z-40 md:hidden backdrop-blur-sm"
             />
-            {/* Sliding navigation drawer menu drawer */}
             <motion.aside 
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
@@ -394,7 +390,7 @@ export default function AdminDashboard() {
         )}
       </AnimatePresence>
 
-      {/* ─── MAIN APP ROUTER CORE WORKSPACE PANEL ───────────────────────────── */}
+      {/* MAIN APP ROUTER CORE WORKSPACE PANEL */}
       <main className="flex-1 overflow-y-auto p-4 md:p-6">
         <motion.div
           key={active}
