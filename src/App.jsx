@@ -80,7 +80,7 @@ function LandingPage() {
         <div className="flex justify-center">
           <span className={`flex items-center gap-2 text-xs font-bold px-4 py-1.5 rounded-full border ${isOpen ? "text-emerald-400 border-emerald-500/30 bg-emerald-500/10" : "text-red-400 border-red-500/30 bg-red-500/10"}`}>
             <span className={`w-2 h-2 rounded-full animate-pulse ${isOpen ? "bg-emerald-400" : "bg-red-400"}`} />
-            {isOpen ? "OPEN NOW" : "CLOSED NOW"} · {shop?.open_time || "10:00"} – {shop?.close_time || "22:00"}
+            {isOpen ? "OPEN NOW" : "CLOSED NOW"} · {shop?.open_time || "6:00 AM"} – {shop?.close_time || "10:00 PM"}
           </span>
         </div>
 
@@ -106,7 +106,7 @@ function LandingPage() {
 
         <div className="grid grid-cols-3 gap-3">
           {[
-            { emoji: "🍔", label: "ORDER", desc: "Get your favorite bite" },
+            { emoji: "🥑", label: "ORDER", desc: "Get your favorite bite" },
             { emoji: "📲", label: "SCAN",  desc: "Daily QR at counter" },
             { emoji: "🏆", label: "WIN",   desc: "Free food at 7 days" },
           ].map((s) => (
