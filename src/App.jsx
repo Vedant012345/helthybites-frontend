@@ -32,15 +32,17 @@ function ProtectedRoute({ children, adminOnly = false }) {
 
 // ─── Landing Page ─────────────────────────────────────────────────────────────
 function LandingPage() {
-  const { data: shop } = useQuery({
+  const { data: shop, isLoading: isShopLoading } = useQuery({
     queryKey: ["shop"],
-    queryFn: () => shopService.getShop().then((r) => r.data),
+    queryFn: () => shopService.getShop().then((r) => r?.data || null).catch(() => null),
   });
-  const { data: menu } = useQuery({
+  
+  const { data: menu, isLoading: isMenuLoading } = useQuery({
     queryKey: ["menu"],
-    queryFn: () => menuService.getMenu().then((r) => r.data),
+    queryFn: () => menuService.getMenu().then((r) => r?.data || null).catch(() => null),
   });
 
+  // Safe checks to avoid crashing during initialization loops
   const shopName = shop?.shop_name || "Streak Bites";
   const isOpen = shop?.is_currently_open ?? true;
 
@@ -49,6 +51,15 @@ function LandingPage() {
     { id: 2, name: "Streak Wings", description: "Honey-habanero glaze", price: "10.50" },
     { id: 3, name: "Nitro Fuel", description: "18-hr cold brew + nitrogen", price: "5.50" },
   ];
+
+  // Optional Full Loading Indicator fallback to stop black screen unmounts
+  if (isShopLoading && isMenuLoading) {
+    return (
+      <div className="min-h-screen bg-[#0b1326] flex items-center justify-center text-white">
+        <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0b1326] text-white">
@@ -112,16 +123,29 @@ function LandingPage() {
         <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
           <h2 className="text-lg font-black mb-4">Today's <span className="grad-text">Top Bites</span></h2>
           <div className="flex flex-col gap-3">
-            {(menu || fallbackMenu).map((item) => (
-              <div key={item.id}
-                className="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
-                <div>
-                  <p className="font-bold text-sm">{item.name}</p>
-                  <p className="text-xs text-white/40 mt-0.5">{item.description}</p>
+            {Array.isArray(menu) && menu.length > 0 ? (
+              menu.map((item) => (
+                <div key={item.id}
+                  className="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
+                  <div>
+                    <p className="font-bold text-sm">{item.name}</p>
+                    <p className="text-xs text-white/40 mt-0.5">{item.description}</p>
+                  </div>
+                  <span className="text-orange-500 font-black text-sm">${item.price}</span>
                 </div>
-                <span className="text-orange-500 font-black text-sm">${item.price}</span>
-              </div>
-            ))}
+              ))
+            ) : (
+              fallbackMenu.map((item) => (
+                <div key={item.id}
+                  className="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
+                  <div>
+                    <p className="font-bold text-sm">{item.name}</p>
+                    <p className="text-xs text-white/40 mt-0.5">{item.description}</p>
+                  </div>
+                  <span className="text-orange-500 font-black text-sm">${item.price}</span>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
